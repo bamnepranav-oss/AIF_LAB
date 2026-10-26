@@ -1,0 +1,78 @@
+
+# Q1: BFS for Smart City Emergency Evacuation System
+
+from collections import deque
+
+
+def find_nearest_center(roads, start, evacuation_centers):
+    """Find the nearest evacuation center using BFS."""
+
+    if start not in roads:
+        return None, None
+
+    queue = deque([(start, [start])])
+    visited = {start}
+
+    while queue:
+        current, path = queue.popleft()
+
+        # Check whether the current location is an evacuation center
+        if current in evacuation_centers:
+            return current, path
+
+        # Explore all connected roads
+        for neighbor in roads.get(current, []):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append((neighbor, path + [neighbor]))
+
+    # No evacuation center is reachable
+    return None, None
+
+
+# ---------------- TEST CASE ----------------
+
+print("=" * 60)
+print("SMART CITY EMERGENCY EVACUATION SYSTEM")
+print("=" * 60)
+
+# City road network represented as a graph
+roads = {
+    "Home": ["Street_A", "Street_B"],
+    "Street_A": ["Home", "Market", "Hospital"],
+    "Street_B": ["Home", "Park", "School"],
+    "Market": ["Street_A", "Plaza"],
+    "Hospital": ["Street_A", "Emergency_Center_1"],
+    "Park": ["Street_B", "Lake"],
+    "School": ["Street_B", "Emergency_Center_2"],
+    "Plaza": ["Market"],
+    "Lake": ["Park"],
+    "Emergency_Center_1": ["Hospital"],
+    "Emergency_Center_2": ["School"]
+}
+
+# Available evacuation centers
+evacuation_centers = {
+    "Emergency_Center_1",
+    "Emergency_Center_2"
+}
+
+# Starting location
+start = "Home"
+
+# Find the nearest evacuation center
+center, route = find_nearest_center(
+    roads, start, evacuation_centers
+)
+
+# Display results
+if center is not None:
+    print(f"\nStarting location: {start}")
+    print(f"Nearest evacuation center: {center}")
+    print(f"Safest route: {' -> '.join(route)}")
+    print(f"Distance: {len(route) - 1} blocks")
+else:
+    print(f"\nStarting location: {start}")
+    print("No reachable evacuation center found.")
+
+print("\n" + "=" * 60)
