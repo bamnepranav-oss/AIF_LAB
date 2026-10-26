@@ -1,0 +1,36 @@
+# Hill Climbing for Solar Panel Orientation Optimization
+
+import math
+
+def power(angle):
+    # Estimated power generated at a particular panel angle
+    return math.sin(math.radians(angle)) * 100
+
+
+def hill_climbing():
+    angle = 0
+    step = 5
+
+    while True:
+        current_power = power(angle)
+
+        left_angle = angle - step
+        right_angle = angle + step
+
+        left_power = power(left_angle)
+        right_power = power(right_angle)
+
+        if right_power > current_power:
+            angle = right_angle
+        elif left_power > current_power:
+            angle = left_angle
+        else:
+            break
+
+    return angle, power(angle)
+
+
+best_angle, maximum_power = hill_climbing()
+
+print("Optimal Solar Panel Angle:", best_angle, "degrees")
+print("Maximum Power Generated:", round(maximum_power, 2), "units")
